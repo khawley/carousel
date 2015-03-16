@@ -41,6 +41,14 @@ $(function(){
 
         function triggered(e){
             print("triggered", true);
+            if ( e.type != "click" ){
+                // only trigger key press/key down for enter or space keys
+                var code = (e.keyCode || e.which);
+                if(code != 13 && code != 32) {
+                    return;
+                }
+            }
+
             // has been triggered by root, do not need to check if root
             if( $(e.target).is(self.rightButton) ){
                 self.turnPage(e, "right");
@@ -166,7 +174,7 @@ $(function(){
             self.updatePageLocation();
         }
 
-        root.on("click keypress", self.triggered);
+        root.on("click keypress keydown", self.triggered);
     }
 
     // jQuery plugin implementation
