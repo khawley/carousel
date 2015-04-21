@@ -5,8 +5,8 @@
     <tag id/class="selector">
         <tag class="prev-button">Previous</tag>
         .....
-        <tag class=".item-page">...</tag>
-        <tag class=".item-page">...</tag>
+        <tag class=".item-page">...<a ...>...</a>...</tag>
+        <tag class=".item-page">...<a ...>...</a>...</tag>
         ....
         <tag class=".next-button">Next</tag>
     </tag>
@@ -16,6 +16,10 @@
 
     CSS for activeClass is NOT necessary, as long as using a notActiveClass with a display:none style.
     activeClass IS needed for javascript selecting.
+
+    Can use right and left arrow keys to traverse the pages (as well as using enter/space on the buttons).
+    If within the carousel when using arrow keys, focus within the carousel will shift to the first <a> in
+    the active item page. (This prevents focus from being lost by going off screen or to the top of the page).
 
 
  */
@@ -79,7 +83,7 @@ $(function(){
                 else the user will be directed to the top of the page again :P
             */
             if( ! $(e.target).is(self.buttons) ){
-                $("."+self.activeClass+" a:first").focus();
+                self.getActivePage().find("a:first").focus();
             }
         }
         function pickRandom(){
