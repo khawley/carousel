@@ -37,22 +37,30 @@ $(function(){
             progress: "#progress",
             debug: false
         };
+        var key = {
+            rightArrow: 39,
+            leftArrow: 37,
+            space: 32,
+            enter: 13
+        }
         $.extend(self, defaultOptions, options);
+
+        self.buttons = self.rightButton+","+self.leftButton;
 
         function triggered(e){
             print("triggered", true);
             if ( e.type != "click" ){
-                // only trigger key press/key down for enter or space keys
+                // only trigger key press/key down for enter, space, or left/right arrow keys
                 var code = (e.keyCode || e.which);
-                if(code != 13 && code != 32) {
+                if([key.rightArrow, key.leftArrow, key.space, key.enter].indexOf(code) == -1){
                     return;
                 }
             }
 
             // has been triggered by root, do not need to check if root
-            if( $(e.target).is(self.rightButton) ){
+            if( $(e.target).is(self.rightButton) || code == key.rightArrow ){
                 self.turnPage(e, "right");
-            }else if( $(e.target).is(self.leftButton)){
+            }else if( $(e.target).is(self.leftButton) || code == key.leftArrow){
                 self.turnPage(e, "left")
             }
         }
@@ -64,6 +72,15 @@ $(function(){
             self.makePageActive(newCurrent);
             self.makePageInactive(current);
             self.updatePageLocation();
+            updateFocus(e);
+        }
+        function updateFocus(e){
+            /* Specifically if user navs with arrows from within carousel, the focus will need to be shifted
+                else the user will be directed to the top of the page again :P
+            */
+            if( ! $(e.target).is(self.buttons) ){
+                $("."+self.activeClass+" a:first").focus();
+            }
         }
         function pickRandom(){
             var l = self.getSize();
