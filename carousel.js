@@ -39,7 +39,15 @@ $(function(){
             currentPage: ".currentPage",
             totalPages: ".totalPages",
             progress: "#progress",
-            debug: false
+            debug: false,
+
+            /** callbacks - both send self to the callback function**/
+            // accept a callback to be run after init
+            onInitCallback: false,
+
+            // accepts a callback to be run after page turn
+            onPageTurnCallback: false
+            /**  **/
         };
         var key = {
             rightArrow: 39,
@@ -77,6 +85,9 @@ $(function(){
             self.makePageInactive(current);
             self.updatePageLocation();
             updateFocus(e);
+            if(self.onPageTurnCallback != false){
+                self.onPageTurnCallback(self);
+            }
         }
         function updateFocus(e){
             /* Specifically if user navs with arrows from within carousel, the focus will need to be shifted
@@ -183,7 +194,8 @@ $(function(){
             makePageActive: makePageActive,
             makePageInactive: makePageInactive,
             pickRandom: pickRandom,
-            triggered: triggered
+            triggered: triggered,
+            getSelector: function(){ return selector;},
 
         });
 
@@ -193,6 +205,9 @@ $(function(){
             self.pickRandom();
         }else{
             self.updatePageLocation();
+        }
+        if(self.onInitCallback != false){
+            self.onInitCallback(self);
         }
 
         root.on("click keypress keydown", self.triggered);
